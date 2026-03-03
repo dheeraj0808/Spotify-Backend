@@ -1,46 +1,60 @@
-const db = require("../db");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db");
 
-// Function to create the users table if it doesn't exist
-const createUserTable = () => {
-    const query = `
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(255) NOT NULL UNIQUE,
-            role ENUM('user', 'artist') DEFAULT 'user',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    `;
-    db.query(query, (err, result) => {
-        if (err) {
-            console.error("Error creating users table:", err.message);
-        } else {
-            console.log("Users table ensured in database");
-        }
-    });
-};
-
-// Creating table automatically when this model is imported
-createUserTable();
-
-// Model object to handle user operations
-const User = {
-    // Find a user by their username
-    findByUsername: (username, callback) => {
-        const sql = "SELECT * FROM users WHERE username = ?";
-        db.query(sql, [username], callback);
+const User = sequelize.define("User", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
     },
-
-    // Create a new user
-    create: (userData, callback) => {
-        const sql = "INSERT INTO users (username, role) VALUES (?, ?)";
-        db.query(sql, [userData.username, userData.role || 'user'], callback);
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
     },
-
-    // Get all users
-    getAll: (callback) => {
-        const sql = "SELECT id, username, role, created_at FROM users";
-        db.query(sql, callback);
+    first_name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    last_name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    role_id: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1 // Assuming 1 for regular user
+    },
+    role: {
+        type: DataTypes.ENUM('user', 'artist'),
+        defaultValue: 'user'
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
-};
+}, {
+    tableName: "users",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: false // matching original schema which only had created_at
+});
+
+// Sync the model with the database
+User.sync()
+    .then(() => console.log("Users table ensured in database"))
+    .catch(err => console.error("Error creating users table:", err.message));
 
 module.exports = User;
