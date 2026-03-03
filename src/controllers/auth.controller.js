@@ -52,9 +52,17 @@ async function loginUser(req, res) {
     try {
         const { username, email, password } = req.body;
 
+        if (!username && !email) {
+            return res.status(400).json({ message: "Username or Email is required" });
+        }
+
+        const searchCriteria = [];
+        if (username) searchCriteria.push({ username });
+        if (email) searchCriteria.push({ email });
+
         const user = await User.findOne({
             where: {
-                [Op.or]: [{ username }, { email }]
+                [Op.or]: searchCriteria
             }
         });
 
