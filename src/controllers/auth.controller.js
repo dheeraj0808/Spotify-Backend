@@ -48,4 +48,44 @@ async function registerUser(req, res) {
     }
 }
 
-module.exports = { registerUser };
+async function loginUser(req, res) {
+    try {
+        const { username, email, password } = req.body;
+
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [{ username }, { email }]
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role
+        }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+        res.status(200).json({
+            message: "User logged in successfully",
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+module.exports = { registerUser, loginUser };
