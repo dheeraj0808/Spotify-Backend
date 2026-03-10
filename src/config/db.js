@@ -1,4 +1,11 @@
 const { Sequelize } = require("sequelize");
+//{sequalize} : Sequelize class from sequelize package 
+//if we use sequelize, we need to install it first using npm install sequelize
+//then create a instance of sequelize like this 
+//const sequelize = new Sequelize.Sequelize("database", "user", "password");
+//Sequelize.DataTypes.STRING :-datatype k liye
+
+
 const dotenv = require("dotenv");
 
 dotenv.config();
