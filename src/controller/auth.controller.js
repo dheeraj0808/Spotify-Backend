@@ -7,7 +7,6 @@ const registerUser = async (req, res) => {
     try {
 
         const { name, email, password } = req.body;
-        
 
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -16,7 +15,7 @@ const registerUser = async (req, res) => {
         }
 
         const existingUser = await User.findOne({
-           where: { email: email.toLowerCase() }
+            where: { email: email.toLowerCase() }
         });
 
         if (existingUser) {
@@ -29,7 +28,7 @@ const registerUser = async (req, res) => {
 
         const user = await User.create({
             name,
-            email,
+            email: email.toLowerCase(),
             password: hashedPassword
         });
 
@@ -41,13 +40,18 @@ const registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({
+            error: error.message
+        });
     }
 };
+
+
 const loginUser = async (req, res) => {
     try {
 
         const { email, password } = req.body;
+
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required"
@@ -55,7 +59,7 @@ const loginUser = async (req, res) => {
         }
 
         const user = await User.findOne({
-            email: email.toLowerCase()
+            where: { email: email.toLowerCase() }
         });
 
         if (!user) {
@@ -73,7 +77,7 @@ const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id },
+            { id: user.id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -87,9 +91,12 @@ const loginUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({
+            error: error.message
+        });
     }
 };
+
 
 module.exports = {
     registerUser,
