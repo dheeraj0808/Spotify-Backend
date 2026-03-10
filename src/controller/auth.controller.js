@@ -7,6 +7,7 @@ const registerUser = async (req, res) => {
     try {
 
         const { name, email, password } = req.body;
+        
 
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -15,7 +16,7 @@ const registerUser = async (req, res) => {
         }
 
         const existingUser = await User.findOne({
-            where: { email }
+           where: { email: email.toLowerCase() }
         });
 
         if (existingUser) {
@@ -54,7 +55,7 @@ const loginUser = async (req, res) => {
         }
 
         const user = await User.findOne({
-            where: { email }
+            email: email.toLowerCase()
         });
 
         if (!user) {
