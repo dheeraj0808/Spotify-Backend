@@ -11,7 +11,10 @@ const User = sequelize.define("User", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      isEmail: true
+    }
   },
 
   password: {
@@ -19,11 +22,10 @@ const User = sequelize.define("User", {
     allowNull: false
   },
  role: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    enum: ["user", "artist"],
-    defaultValue: "user"
-  }
+  type: DataTypes.ENUM("user", "artist", "admin"),
+  defaultValue: "user",
+  allowNull: false
+}
 
 }, {
   tableName: "users",
