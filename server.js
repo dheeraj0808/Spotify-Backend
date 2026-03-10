@@ -10,3 +10,5 @@ sequelize.sync().then(()=>{
  });
 
 });
+//in this code sequilize.sync() will create all the tables in the database
+// and then the server will start listening on the specified port
