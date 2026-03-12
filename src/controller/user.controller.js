@@ -22,6 +22,8 @@ const getAllUsers = async (req,res)=>{
  res.json(users);
 }
 
+async 
+
 module.exports = {
  getProfile,
  getAllUsers
