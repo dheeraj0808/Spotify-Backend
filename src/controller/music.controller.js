@@ -1,5 +1,6 @@
 const Music = require("../model/music.model");
 const jwt = require("jsonwebtoken");
+//this is the music controller api
 
 async function createMusic(req, res) {
 
