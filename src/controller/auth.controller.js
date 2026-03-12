@@ -32,7 +32,8 @@ const registerUser = async (req, res) => {
             password: hashedPassword
         });
 
-        const { password: pwd, ...userData } = user.toJSON();
+        const userData = user.toJSON();
+        delete userData.password;
 
         res.status(201).json({
             message: "User registered successfully",
@@ -82,7 +83,8 @@ const loginUser = async (req, res) => {
             { expiresIn: "1d" }
         );
 
-        const { password: pwd, ...userData } = user.toJSON();
+        const userData = user.toJSON();
+        delete userData.password;
 
         res.status(200).json({
             message: "Login successful",
