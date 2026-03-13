@@ -23,3 +23,4 @@ const Music = sequelize.define("Music", {
 });
 
 module.exports = Music;
+//this is the music model used for the music table in the database
