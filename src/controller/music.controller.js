@@ -24,9 +24,13 @@ async function createMusic(req, res) {
 
 
     const { title } = req.body;
-    const { file } = req.body;
+    const file = req.file;
 
-    const result = await uploadFile(file, "music");
+    if (!file) {
+        return res.status(400).json({ message: "No music file uploaded" });
+    }
+
+    const result = await uploadFile(file.buffer, "music");
 
     const music = await Music.create({
         uri: result.url,
