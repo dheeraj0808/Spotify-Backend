@@ -13,13 +13,16 @@ async function createMusic(req, res) {
 
 try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
+    if (decoded.role !== "artist") {
         return res.status(401).json({ message: "Unauthorized" });
     }
 } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });
 }
-
+const {title,artist,uri} = req.body;    
+if(!title || !artist || !uri){
+    return res.status(400).json({ message: "All fields are required" });
+}
     
 
 }
