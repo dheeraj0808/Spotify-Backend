@@ -6,9 +6,7 @@ const { Sequelize } = require("sequelize");
 //Sequelize.DataTypes.STRING :-datatype k liye
 
 
-const dotenv = require("dotenv");
 
-dotenv.config();
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
