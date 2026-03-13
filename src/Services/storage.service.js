@@ -17,4 +17,4 @@ async function uploadFile(file,folder){
     });
     return result;
 }
-module.exports = imagekitClient;
+module.exports = {uploadFile}
