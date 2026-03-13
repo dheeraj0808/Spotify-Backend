@@ -11,9 +11,9 @@ const Music = sequelize.define("Music", {
     allowNull: false
   },
   artist: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     references: {
-      model: "User",
+      model: "users",
       key: "id"
     },
     allowNull: false
