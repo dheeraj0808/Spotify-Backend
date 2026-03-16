@@ -71,6 +71,7 @@ const loginUser = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
 
+
         if (!isMatch) {
             return res.status(401).json({
                 message: "Invalid password"
@@ -78,9 +79,10 @@ const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id, role: user.role },
+            { id: user.id, role: user.role, },
             process.env.JWT_SECRET,
-            { expiresIn: "5h" }
+            { expiresIn: "1m" },
+
         );
 
         const userData = user.toJSON();
@@ -98,6 +100,8 @@ const loginUser = async (req, res) => {
         });
     }
 };
+
+
 
 
 module.exports = {
