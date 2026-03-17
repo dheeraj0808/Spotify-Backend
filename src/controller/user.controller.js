@@ -62,8 +62,32 @@ const updateProfile = async (req, res) => {
   }
 }
 
+const changePassword = async (req, res) => {
+
+  try {
+
+    const { currentPassword, newPassword } = req.body
+
+    if (!currentPassword || !newPassword) {
+
+      res.status(400).json({
+        message: "password and current password are required"
+      });
+
+    }
+
+  }
+  catch(error){
+    
+  }
+
+}
+
+
+
 module.exports = {
   getProfile,
   getAllUsers,
-  updateProfile
+  updateProfile,
+  changePassword
 }
