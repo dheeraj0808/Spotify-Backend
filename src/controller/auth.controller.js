@@ -103,10 +103,50 @@ const loginUser = async (req, res) => {
     }
 };
 
-const forgetPassword = async (req , res) =>{
+const forgetPassword = async (req, res) => {
+  try {
+    // 1. Get email from user
+    const { email } = req.body;
 
+    // Validate email exists
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // 2. Find user in database
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 3. Generate OTP
+    const otp = generateOtp();
+
+    // 4. Set OTP expiry time (10 minutes from now)
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    // 5. Save OTP to database
+    await user.update({
+      otp: otp,
+      otpExpiry: otpExpiry,
+      isOtpVerified: false
+    });
+
+    // 6. For now, just log the OTP (later you'll send email)
+    console.log(`OTP for ${email}: ${otp}`);
+
+    // 7. Send success response
+    res.json({ 
+      message: "OTP sent to your email",
+      // FOR TESTING ONLY - Remove in production!
+      // otp: otp  
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
-
 
 
 
