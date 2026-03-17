@@ -32,7 +32,10 @@ const User = sequelize.define("User", {
     type: DataTypes.ENUM("user", "artist", "admin"),
     defaultValue: "user",
     allowNull: false
-  }
+  },
+ // otp: {
+ //   type: DataTypes.INTEGER
+ //  }
 
 }, {
   tableName: "users",
