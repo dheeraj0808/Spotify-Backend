@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/dheeraj0808/Spotify-Backend#readme",
   "dependencies": {
+    "argon2-password": "^1.0.0",
     "bcrypt": "^6.0.0",
     "cookie": "^1.1.1",
     "cookie-parser": "^1.4.7",
