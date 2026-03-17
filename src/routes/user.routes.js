@@ -9,4 +9,6 @@ router.put("/profile", auth, userController.updateProfile);
 
 router.get("/users", auth, userController.getAllUsers);
 
+router.patch("/changePassword", userController.changePassword);
+
 module.exports = router;
