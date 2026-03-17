@@ -1,7 +1,7 @@
 const User = require("../model/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { secureHash, secureVerify, isStrong } = require('argon2-password');
+
 
 const registerUser = async (req, res) => {
     try {
@@ -13,11 +13,6 @@ const registerUser = async (req, res) => {
                 message: "All fields are required"
             });
         }
-        const strength = isStrong(password);
-        if (!strength.strong) {
-            return res.status(400).json({ errors: strength.errors });
-        }
-//   return
 
         const existingUser = await User.findOne({
             where: { email: email.toLowerCase() }
@@ -28,9 +23,8 @@ const registerUser = async (req, res) => {
                 message: "User already exists"
             });
         }
-        const hashedPassword = await secureHash(password);
 
-        // const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             name,
@@ -74,13 +68,10 @@ const loginUser = async (req, res) => {
                 message: "User not found"
             });
         }
-console.log(user.password , user.passwordHash)
-        const isMatch1 = await bcrypt.compare(password, user.password);
 
-        const isMatch = await secureVerify(password, user.password);
-        if (!isMatch ) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
+        const isMatch = await bcrypt.compare(password, user.password);
+
+
         if (!isMatch) {
             return res.status(401).json({
                 message: "Invalid password"
