@@ -81,29 +81,34 @@ const changePassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if(currentPassword == newPassword){
-      return res.status(401).json({message:"current password and new password shoud be diff"});
-    }
-
-    console.log("yyyyyyyyß","----------");
-  const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if(!isMatch){
-      return res.status(401).json({message:"You are unauthorized password does not match"});
-    } 
 
 
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
 
-
-
-
-
-
-
-  }
-  catch(error){
+    if (isMatch) {
     
+      if (currentPassword != newPassword) {
+        let newPa = await bcrypt.hash(newPassword, 10)
+        
+        await User.update({ password: newPa },
+          {
+            where: {
+              id: user.id
+            }
+          })
+      } else {
+        return res.status(401).json({ message: "current password and new password shoud be diff" });
+      }
+      return res.status(201).json({ message: "Password changed Successfully" });
+    } else{
+    return res.status(404).json({message:"You are not Authorized , Password did not matched"});
   }
 
+  }
+
+catch (error) {
+console.log(error);
+  }
 }
 
 
