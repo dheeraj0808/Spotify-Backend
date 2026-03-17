@@ -101,10 +101,15 @@ const loginUser = async (req, res) => {
     }
 };
 
+const forgetPassword = async (req , res) =>{
+
+};
+
 
 
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    forgetPassword
 };
