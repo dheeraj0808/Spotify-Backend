@@ -1,4 +1,5 @@
 const User = require("../model/user.model");
+const bcrypt = require("bcrypt");
 
 const getProfile = async (req, res) => {
 
@@ -75,6 +76,28 @@ const changePassword = async (req, res) => {
       });
 
     }
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if(currentPassword == newPassword){
+      return res.status(401).json({message:"current password and new password shoud be diff"});
+    }
+
+    console.log("yyyyyyyyß","----------");
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if(!isMatch){
+      return res.status(401).json({message:"You are unauthorized password does not match"});
+    } 
+
+
+
+
+
+
+
+
 
   }
   catch(error){
