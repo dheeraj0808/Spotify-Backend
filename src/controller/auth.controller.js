@@ -1,6 +1,7 @@
 const User = require("../model/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const generateOtp = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -148,10 +149,83 @@ const forgetPassword = async (req, res) => {
   }
 };
 
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required" });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check OTP
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Incorrect OTP!" });
+    }
+
+    // Check expiry
+    if (new Date() > user.otpExpiry) {
+      return res.status(400).json({ message: "OTP has expired! Request new OTP" });
+    }
+
+    // Mark as verified
+    await user.update({ isOtpVerified: true });
+
+    res.json({ message: "OTP verified! Now you can reset your password" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: "Email and new password are required" });
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if OTP was verified
+    if (!user.isOtpVerified) {
+      return res.status(400).json({ message: "Please verify OTP first!" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password and clear OTP fields
+    await user.update({
+      password: hashedPassword,
+      otp: null,
+      otpExpiry: null,
+      isOtpVerified: false
+    });
+
+    res.json({ message: "Password reset successfully! You can now login" });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 module.exports = {
     registerUser,
     loginUser,
-    forgetPassword
+    forgetPassword,
+    verifyOtp,
+    resetPassword
 };
