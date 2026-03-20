@@ -2,25 +2,34 @@ const User = require("../model/user.model");
 const bcrypt = require("bcrypt");
 
 const getProfile = async (req, res) => {
-
-  const user = await User.findByPk(req.user.id, {
-    attributes: { exclude: ["password"] }
-  });
-
-  res.json(user);
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password", "otp", "otpExpiry"] }
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 }
 
 const getAllUsers = async (req, res) => {
+  try {
+    // Role check is now handled by middleware, but extra safety is ok
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
-  if (req.user.role !== "admin") {
-    return res.json({ message: "Access denied" });
+    const users = await User.findAll({
+      attributes: { exclude: ["password", "otp", "otpExpiry"] }
+    });
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-
-  const users = await User.findAll({
-    attributes: { exclude: ["password"] }
-  });
-
-  res.json(users);
 }
 
 const updateProfile = async (req, res) => {
@@ -33,12 +42,12 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (email && email !== user.email) {
-      const existingUser = await User.findOne({ where: { email } });
+    if (email && email.toLowerCase() !== user.email.toLowerCase()) {
+      const existingUser = await User.findOne({ where: { email: email.toLowerCase() } });
       if (existingUser) {
         return res.status(400).json({ message: "Email already exists" });
       }
-      user.email = email;
+      user.email = email.toLowerCase();
     }
 
     if (name) {
@@ -64,54 +73,42 @@ const updateProfile = async (req, res) => {
 }
 
 const changePassword = async (req, res) => {
-
   try {
-
-    const { currentPassword, newPassword } = req.body
+    const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-
-      res.status(400).json({
-        message: "password and current password are required"
+      return res.status(400).json({
+        message: "Current password and new password are required"
       });
-
     }
-    const user = await User.findByPk(req.user.id);
 
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-
     const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password does not match" });
+    }
 
-    if (isMatch) {
-    
-      if (currentPassword != newPassword) {
-        let newPa = await bcrypt.hash(newPassword, 10)
-        
-        await User.update({ password: newPa },
-          {
-            where: {
-              id: user.id
-            }
-          })
-      } else {
-        return res.status(401).json({ message: "current password and new password shoud be diff" });
-      }
-      return res.status(201).json({ message: "Password changed Successfully" });
-    } else{
-    return res.status(404).json({message:"You are not Authorized , Password did not matched"});
-  }
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ message: "New password must be different from current password" });
+    }
 
-  }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters long" });
+    }
 
-catch (error) {
-console.log(error);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await user.update({ password: hashedPassword });
+
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Change Password Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 }
-
-
 
 module.exports = {
   getProfile,

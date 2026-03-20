@@ -4,22 +4,8 @@ const { uploadFile } = require("../Services/storage.service");
 //this is the music controller api
 
 async function createMusic(req, res) {
-
-
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-    }
-
-
-    let decoded;
-    try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded.role !== "artist") {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-    } catch (error) {
-        return res.status(401).json({ message: "Unauthorized" });
+    if (!req.user || req.user.role !== "artist") {
+        return res.status(403).json({ message: "Only artists can upload music" });
     }
 
 
@@ -35,19 +21,19 @@ async function createMusic(req, res) {
     const music = await Music.create({
         uri: result.url,
         title: title,
-        artist: decoded.id,
+        artist: req.user.id,
     });
 
-    res.status(201).json({ 
-        message: "Music created successfully" ,
-music: {
-        id: music.id,
-        title: music.title,
-        uri: music.uri,
-        artist: music.artist,
-        createdAt: music.createdAt,
-        updatedAt: music.updatedAt,
-    }
+    res.status(201).json({
+        message: "Music created successfully",
+        music: {
+            id: music.id,
+            title: music.title,
+            uri: music.uri,
+            artist: music.artist,
+            createdAt: music.createdAt,
+            updatedAt: music.updatedAt,
+        }
     });
 }
 
