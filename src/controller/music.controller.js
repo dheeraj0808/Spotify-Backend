@@ -37,7 +37,17 @@ async function createMusic(req, res) {
     });
 }
 
-
+async function getAllMusic(req, res) {
+    if (!req.user || req.user.role !== "user") {
+        return res.status(403).json({ message: "Only admin and artists can fetch all music" });
+    }
+    const music = await Music.find();
+    res.status(200).json({
+        message: "Music fetched successfully",
+        music,
+    });
+}
 module.exports = {
-    createMusic
+    createMusic,
+    getAllMusic
 };
