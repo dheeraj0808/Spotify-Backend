@@ -12,4 +12,12 @@ router.get("/users", auth, role("admin"), userController.getAllUsers);
 
 router.patch("/changePassword", auth ,userController.changePassword);
 
+router.delete("/delete/:id", auth, role("admin"), userController.deleteUser);
+
+router.patch("/updateRole/:id", auth, role("admin"), userController.updateRole);
+
+router.patch("/block/:id", auth, role("admin"), userController.blockUser);
+
+router.patch("/unblock/:id", auth, role("admin"), userController.unblockUser);
+
 module.exports = router;
