@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
+const sequelize = require("../config/database.js");
 
 const User = sequelize.define("User", {
 
@@ -34,20 +34,20 @@ const User = sequelize.define("User", {
     allowNull: false
   },
 
- otp: {
-   type: DataTypes.STRING,
-   allowNull: true,
-   defaultValue:null
-  },
-
-  otpExpiry:{
-    type: DataTypes.DATE,
-    allowNull: true,               
+  otp: {
+    type: DataTypes.STRING,
+    allowNull: true,
     defaultValue: null
   },
 
-  isOtpVerified:{
-    type:DataTypes.BOOLEAN,
+  otpExpiry: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
+  },
+
+  isOtpVerified: {
+    type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false
   }

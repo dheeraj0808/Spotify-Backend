@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
+const sequelize = require("../config/database.js");
 
 const Music = sequelize.define("Music", {
   uri: {
@@ -18,7 +18,7 @@ const Music = sequelize.define("Music", {
     },
     allowNull: false
   },
-  
+
 
 });
 

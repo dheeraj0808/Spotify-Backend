@@ -47,7 +47,54 @@ async function getAllMusic(req, res) {
         music,
     });
 }
+
+async function getMusicByName   (req, res) {
+    const { name } = req.params;
+    const music = await Music.find({ title: name });
+    if (!music) {
+        return res.status(404).json({ message: "Music not found" });
+    }
+    res.status(200).json({
+        message: "Music fetched successfully",
+        music,
+    });
+}
+
+async function updateMusic(req, res) {
+    if(!req.user) {
+        return res.status(403).json({ message: "Only artists and admin can update music" });
+    }
+    const { id } = req.params;
+    const { title } = req.body;
+    const music = await Music.findByIdAndUpdate(id, { title }, { new: true });
+    if (!music) {
+        return res.status(404).json({ message: "Music not found" });
+    }
+    res.status(200).json({
+        message: "Music updated successfully",
+        music,
+    });
+}
+
+async function deleteMusic(req, res) {
+    if(!req.user) {
+        return res.status(403).json({ message: "Only artists and admin can delete music" });
+    }
+    const { id } = req.params;
+    const music = await Music.findByIdAndDelete(id);
+    if (!music) {
+        return res.status(404).json({ message: "Music not found" });
+    }
+    res.status(200).json({
+        message: "Music deleted successfully",
+        music,
+    });
+}
+
 module.exports = {
     createMusic,
-    getAllMusic
+    getAllMusic,
+    getMusicByName,
+    updateMusic,
+    deleteMusic
 };
