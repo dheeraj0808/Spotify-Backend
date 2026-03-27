@@ -11,7 +11,7 @@
       "type": "string"
     },
     {
-      "key": "musicId",
+      "key": "playlistId",
       "value": "",
       "type": "string"
     }
@@ -353,6 +353,148 @@
                 "api",
                 "delete",
                 "{{musicId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Playlist",
+      "item": [
+        {
+          "name": "Create Playlist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if(responseJson.id) {",
+                  "    pm.collectionVariables.set(\"playlistId\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Playlist\",\n  \"description\": \"Awesome songs\",\n  \"image\": \"https://example.com/image.jpg\",\n  \"userId\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "create"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Playlists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Music to Playlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/add/{{playlistId}}/{{musicId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "add",
+                "{{playlistId}}",
+                "{{musicId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove Music from Playlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/remove/{{playlistId}}/{{musicId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "remove",
+                "{{playlistId}}",
+                "{{musicId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Playlist with Songs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/with-songs/{{playlistId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "with-songs",
+                "{{playlistId}}"
               ]
             }
           }
