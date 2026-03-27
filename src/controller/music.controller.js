@@ -38,10 +38,13 @@ async function createMusic(req, res) {
 }
 
 async function getAllMusic(req, res) {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
     if (!req.user || req.user.role !== "user") {
         return res.status(403).json({ message: "Only admin and artists can fetch all music" });
     }
-    const music = await Music.find();
+    const music = await Music.find().skip(skip).limit(limit);
     res.status(200).json({
         message: "Music fetched successfully",
         music,
@@ -90,6 +93,7 @@ async function deleteMusic(req, res) {
         music,
     });
 }
+
 
 module.exports = {
     createMusic,
