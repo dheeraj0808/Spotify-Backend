@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const musicRoutes = require("./routes/music.routes");
 const playlistRoutes = require("./routes/playlist.routes.js");
+const likeRoutes = require("./routes/like.routes");
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", musicRoutes);
 app.use("/api", playlistRoutes);
+app.use("/api", likeRoutes);
 
 module.exports = app;
