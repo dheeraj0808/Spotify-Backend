@@ -335,6 +335,82 @@
           }
         },
         {
+          "name": "Get All Music (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Music by Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/search/songname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "search",
+                "songname"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Music (Artist/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Song Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/update/{{musicId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "update",
+                "{{musicId}}"
+              ]
+            }
+          }
+        },
+        {
           "name": "Delete Music (Artist/Admin)",
           "request": {
             "method": "DELETE",
