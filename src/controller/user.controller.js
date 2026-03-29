@@ -17,7 +17,7 @@ const getProfile = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    // Role check is now handled by middleware, but extra safety is ok
+    // Role check is now handled by middleware, but extra safety is added here
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied" });
     }
@@ -142,7 +142,7 @@ const updateRole = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-} 
+}
 
 const blockUser = async (req, res) => {
   if (req.user.role !== "admin") {
@@ -176,7 +176,7 @@ const unblockUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-} 
+}
 
 module.exports = {
   getProfile,
