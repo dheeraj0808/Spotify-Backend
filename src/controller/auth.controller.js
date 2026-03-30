@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const generateOtp = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return Math.floor(100000 * Math.random()).toString();
 };
 
 const registerUser = async (req, res) => {
