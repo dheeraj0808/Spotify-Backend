@@ -28,9 +28,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet())
+app.use(limiter)
 
-
-app.use("/api/auth", limiter, authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", musicRoutes);
 app.use("/api", playlistRoutes);
