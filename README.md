@@ -1,135 +1,119 @@
-# Spotify Clone - Backend API
+# 🎵 Spotify Clone - Backend API
 
-This is the backend API for a Spotify Clone application, built using Node.js, Express.js, and Sequelize ORM with MySQL. It provides comprehensive endpoints for user authentication, music file management, and playlist creation.
+[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-blue?style=for-the-badge&logo=render)](https://spotify-backend-3ouf.onrender.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=for-the-badge&logo=mysql)](https://mysql.com/)
 
-## 🚀 Features
+This is a premium, industry-standard backend API for a Spotify Clone application. Built with **Node.js**, **Express.js**, and **Sequelize ORM**, it features a robust authentication system, cloud media management, and advanced relational data structures.
 
-- **Authentication & Authorization**: Secure user registration, login, and password management (including OTP-based reset) using JWT.
-- **Role-Based Access Control**: Distinguishes between normal users, artists, and administrators.
-- **Music Management**: Upload, update, delete, and search music tracks.
-- **Media Storage**: Integration with ImageKit for storing images and media assets, and Multer for parsing form data.
-- **Playlist Management**: Create custom playlists, and add or remove songs.
-- **Rate Limiting**: Applied to authentication routes to prevent brute-force attacks.
-- **Security**: Password hashing using bcrypt and secure cookie parsing.
+---
+
+## 🚀 Live Production URL
+The API is currently live and accessible at:
+### 🔗 [https://spotify-backend-3ouf.onrender.com/](https://spotify-backend-3ouf.onrender.com/)
+
+---
+
+## ✨ Features
+
+- **🔐 Advanced Authentication**: Secure User Registration, Login, and Password Management (OTP-based reset) using **JWT** and **Bcrypt**.
+- **👥 Role-Based Access Control (RBAC)**: Distinct permissions for `User`, `Artist`, and `Admin`.
+- **📻 Music Management**: High-performance APIs for uploading, updating, deleting, and searching music tracks.
+- **☁️ Cloud Media Storage**: Integrated with **ImageKit** for optimized cloud storage of music files and images.
+- **📁 Many-to-Many Playlists**: Advanced relationship logic allowing one song to exist in multiple playlists and one playlist to hold thousands of songs (Pivot Table architecture).
+- **🛡️ Production Security**: Implements `Helmet` for secure headers, `CORS` for cross-origin safety, and `Express-Rate-Limit` to prevent brute-force attacks.
+- **⚡ Pro-Performance**: MySQL database optimization with connection pooling and SSL support for cloud databases (Aiven).
+
+---
 
 ## 🛠️ Tech Stack
 
 - **Runtime**: Node.js
 - **Framework**: Express.js
-- **Database**: MySQL
-- **ORM**: Sequelize
-- **Authentication**: JSON Web Tokens (JWT), bcrypt
-- **File Uploads**: Multer, ImageKit
-- **Other Utilities**: CORS, cookie-parser, dotenv, express-rate-limit
+- **Database**: MySQL (Hosted on Aiven Cloud)
+- **ORM**: Sequelize (V6)
+- **Security**: JWT, Bcrypt, Helmet, CORS
+- **Media**: ImageKit Node SDK, Multer
 
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed on your machine:
-- [Node.js](https://nodejs.org/) (v14 or higher)
-- [MySQL Server](https://dev.mysql.com/downloads/mysql/)
-- An [ImageKit](https://imagekit.io/) account for media storage
+---
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file in the root directory and configure the following environment variables:
+Create a `.env` file in the root directory for local development:
 
 ```env
+# Server Config
 PORT=3000
 
-# Database Configuration
-DB_HOST=localhost
-DB_USER=root
-DB_PORT=3306
-DB_PASSWORD=your_db_password
-DB_NAME=spotify
+# Database Configuration (Cloud or Local)
+DB_HOST=your_host
+DB_USER=your_user
+DB_PORT=your_port
+DB_PASSWORD=your_password
+DB_NAME=defaultdb
 
 # JWT Secret
 JWT_SECRET=your_jwt_secret_key
 
-# ImageKit Configuration (For music/image uploads)
-IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
-IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
-IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint
+# ImageKit Configuration
+IMAGEKIT_PRIVATE_KEY=your_private_key
+IMAGEKIT_PUBLIC_KEY=your_public_key
+IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
 ```
 
-## 🚀 Installation & Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/dheeraj0808/Spotify-Backend.git
-   cd Spotify-backend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Database Setup:**
-   Ensure your MySQL server is running and create the database specified in your `.env` file (`spotify`).
-   The models will automatically be synchronized and tables will be created when the server starts via `sequelize.sync()`.
-
-4. **Start the server:**
-   
-   For development (uses nodemon for hot-reloading):
-   ```bash
-   npm run dev
-   ```
-   
-   For production:
-   ```bash
-   npm start
-   ```
+---
 
 ## 📡 API Endpoints
 
-Here is an overview of the core API endpoints. A complete Postman collection (`Spotify_Backend_Postman_Collection.json`) is included in the root directory for easy import and testing.
+### 🔐 Authentication (`/api/auth`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| POST | `/register` | Register a new user |
+| POST | `/login` | Login to account (returns JWT) |
+| POST | `/forgetPassword` | Initiate OTP-based password reset |
+| POST | `/verifyOtp` | Verify received OTP |
+| POST | `/resetPassword` | Set a new password |
 
-### Authentication (`/api/auth`)
-- `POST /register` - Register a new user
-- `POST /login` - Login to account
-- `POST /forgetPassword` - Initiate password reset
-- `POST /verifyOtp` - Verify OTP for reset
-- `POST /resetPassword` - Reset password
+### 🎵 Music Manager (`/api`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| POST | `/create` | Upload a new song (Artist Role) |
+| GET | `/all` | Fetch all available songs (with pagination) |
+| GET | `/search/:name` | Search songs by title |
+| PUT | `/update/:id` | Update track metadata |
+| DELETE | `/delete/:id` | Permanent deletion of track |
 
-### Users (`/api`)
-- `GET /profile` - Get logged-in user's profile
-- `PUT /profile` - Update profile details
-- `GET /users` - Get all users (Admin only)
-- `PATCH /changePassword` - Change existing password
+### 📂 Playlists - Multi-Relationship (`/api`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| POST | `/create` | Initialize a new playlist |
+| GET | `/all` | List all playlists with track counts |
+| POST | `/add` | Add a song to a playlist (Many-to-Many) |
+| DELETE | `/remove` | Remove a song from a playlist |
+| GET | `/with-songs/:id` | Fetch full playlist tracks data |
 
-### Music (`/api`)
-- `POST /create` - Upload a new song (Artist)
-- `GET /all` - Get all songs
-- `GET /search/songname` - Search for a song
-- `PUT /update/:musicId` - Update a song's details
-- `DELETE /delete/:musicId` - Delete a song
+---
 
-### Playlists (`/api`)
-- `POST /create` - Create a new playlist
-- `GET /all` - Get all playlists
-- `POST /add/:playlistId/:musicId` - Add a song to a playlist
-- `DELETE /remove/:playlistId/:musicId` - Remove a song from a playlist
-- `GET /with-songs/:playlistId` - Get a specific playlist along with its songs
+## 🚧 Setup for Developers
 
-## 📁 Project Structure
+1. **Clone & Install:**
+   ```bash
+   git clone https://github.com/dheeraj0808/Spotify-Backend.git
+   npm install
+   ```
 
-```
-Spotify-backend/
-├── src/
-│   ├── app.js             # Express app setup and middleware routing
-│   ├── config/            # Database and external service configurations
-│   ├── controllers/       # Business logic for handling requests
-│   ├── models/            # Sequelize database models
-│   ├── routes/            # API route definitions
-│   └── middlewares/       # Custom middlewares (auth, validation, etc.)
-├── Uploads/               # Temporary directory for file uploads
-├── .env                   # Environment variables (not tracked by git)
-├── package.json           # Output dependencies and project scripts
-├── server.js              # Entry point to start the DB & Express server
-└── Spotify_Backend_Postman_Collection.json # Postman collection for API
-```
+2. **Database Sync:**
+   The project uses `sequelize.sync({ alter: true })`, which automatically manages table creation on startup.
+
+3. **Running the Server:**
+   ```bash
+   npm run dev   # Development with Nodemon
+   npm start     # Production mode
+   ```
+
+---
 
 ## 📝 License
+This project is licensed under the **ISC License**.
 
-This project is licensed under the ISC License.
+*Built with ❤️ for the Spotify Clone community.*
