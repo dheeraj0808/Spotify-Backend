@@ -24,7 +24,7 @@ Like.belongsTo(User, { foreignKey: 'userId' });
 Music.hasMany(Like, { foreignKey: 'musicId' });
 Like.belongsTo(Music, { foreignKey: 'musicId' });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 sequelize.sync({ alter: true }).then(() => {
     app.listen(PORT, () => {

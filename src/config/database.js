@@ -16,7 +16,16 @@ const sequelize = new Sequelize(
         host: process.env.DB_HOST,
         port: process.env.DB_PORT || 3306,
         dialect: "mysql",
-        logging: false
+        logging: false,
+        // Cloud databases like Aiven require SSL connection to work
+        ...(process.env.DB_HOST && process.env.DB_HOST.includes('aivencloud') ? {
+            dialectOptions: {
+                ssl: {
+                    require: true,
+                    rejectUnauthorized: false
+                }
+            }
+        } : {})
     }
 );
 
