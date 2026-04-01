@@ -38,13 +38,13 @@ async function createMusic(req, res) {
 }
 
 async function getAllMusic(req, res) {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
     const skip = (page - 1) * limit;
     if (!req.user || req.user.role !== "user") {
         return res.status(403).json({ message: "Only admin and artists can fetch all music" });
     }
-    const music = await Music.find().skip(skip).limit(limit);
+    const music = await Music.findAll({ offset: skip, limit: limit });
     res.status(200).json({
         message: "Music fetched successfully",
         music,
@@ -53,8 +53,8 @@ async function getAllMusic(req, res) {
 
 async function getMusicByName   (req, res) {
     const { name } = req.params;
-    const music = await Music.find({ title: name });
-    if (!music) {
+    const music = await Music.findAll({ where: { title: name } });
+    if (!music || music.length === 0) {
         return res.status(404).json({ message: "Music not found" });
     }
     res.status(200).json({
@@ -69,10 +69,11 @@ async function updateMusic(req, res) {
     }
     const { id } = req.params;
     const { title } = req.body;
-    const music = await Music.findByIdAndUpdate(id, { title }, { new: true });
+    let music = await Music.findByPk(id);
     if (!music) {
         return res.status(404).json({ message: "Music not found" });
     }
+    await music.update({ title });
     res.status(200).json({
         message: "Music updated successfully",
         music,
@@ -84,10 +85,11 @@ async function deleteMusic(req, res) {
         return res.status(403).json({ message: "Only artists and admin can delete music" });
     }
     const { id } = req.params;
-    const music = await Music.findByIdAndDelete(id);
+    const music = await Music.findByPk(id);
     if (!music) {
         return res.status(404).json({ message: "Music not found" });
     }
+    await music.destroy();
     res.status(200).json({
         message: "Music deleted successfully",
         music,
