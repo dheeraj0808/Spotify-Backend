@@ -24,11 +24,11 @@ Like.belongsTo(User, { foreignKey: 'userId' });
 Music.hasMany(Like, { foreignKey: 'musicId' });
 Like.belongsTo(Music, { foreignKey: 'musicId' });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
-sequelize.sync({ alter: true }).then(() => {
-    app.listen(PORT, () => {
-        console.log("Server running on port " + PORT);
+sequelize.sync().then(() => {
+    app.listen(process.env.PORT, () => {
+        console.log("Server running on port " + process.env.PORT);
     });
 }).catch((err) => {
     console.error("Failed to sync database:", err.message);
