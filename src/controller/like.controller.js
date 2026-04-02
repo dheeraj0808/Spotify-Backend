@@ -2,21 +2,23 @@ const Like = require("../model/like.model");
 
 async function likeMusic(req, res) {
     try {
-        const { userId, musicId } = req.body;
+        const { musicId } = req.body;
+        const userId = req.user.id; // Get from authenticated user
         const like = await Like.create({ userId, musicId });
         res.status(201).json(like);
     } catch (error) {
-        res.status(500).json({ error: "Failed to like music" });
+        res.status(500).json({ error: "Failed to like music", message: error.message });
     }
 }
 
 async function unlikeMusic(req, res) {
     try {
-        const { userId, musicId } = req.body;
+        const { musicId } = req.body;
+        const userId = req.user.id; // Get from authenticated user
         await Like.destroy({ where: { userId, musicId } });
         res.status(200).json({ message: "Music unliked successfully" });
     } catch (error) {
-        res.status(500).json({ error: "Failed to unlike music" });
+        res.status(500).json({ error: "Failed to unlike music", message: error.message });
     }
 }
 

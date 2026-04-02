@@ -31,9 +31,9 @@ app.use(helmet())
 app.use(limiter)
 
 app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
-app.use("/api", musicRoutes);
-app.use("/api", playlistRoutes);
-app.use("/api", likeRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/music", musicRoutes);
+app.use("/api/playlist", playlistRoutes);
+app.use("/api/like", likeRoutes);
 
 module.exports = app;
