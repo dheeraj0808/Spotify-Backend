@@ -50,6 +50,12 @@ const User = sequelize.define("User", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
     allowNull: false
+  },
+
+  isBlocked: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
   }
 
 }, {
