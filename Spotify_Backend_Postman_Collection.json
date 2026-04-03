@@ -1,346 +1,65 @@
 {
-  "info": {
-    "name": "Spotify Backend Application",
-    "description": "Postman Collection for Spotify Backend APIs",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000/api",
-      "type": "string"
-    },
-    {
-      "key": "token",
-      "value": "",
-      "type": "string"
-    }
-  ],
-  "item": [
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Register",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"user\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
-          }
-        },
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if(jsonData.token) {",
-                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
-          }
-        },
-        {
-          "name": "Forget Password",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"john@example.com\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/auth/forgetPassword", "host": ["{{base_url}}"], "path": ["auth", "forgetPassword"] }
-          }
-        },
-        {
-          "name": "Verify OTP",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"john@example.com\",\n    \"otp\": \"123456\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/auth/verifyOtp", "host": ["{{base_url}}"], "path": ["auth", "verifyOtp"] }
-          }
-        },
-        {
-          "name": "Reset Password",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"john@example.com\",\n    \"newPassword\": \"newpass123\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/auth/resetPassword", "host": ["{{base_url}}"], "path": ["auth", "resetPassword"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "User",
-      "item": [
-        {
-          "name": "Get Profile",
-          "request": {
-            "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
-          }
-        },
-        {
-          "name": "Update Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"John Updated\",\n    \"email\": \"john_updated@example.com\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/profile", "host": ["{{base_url}}"], "path": ["profile"] }
-          }
-        },
-        {
-          "name": "Change Password",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"currentPassword\": \"password123\",\n    \"newPassword\": \"newpass123\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/changePassword", "host": ["{{base_url}}"], "path": ["changePassword"] }
-          }
-        },
-        {
-          "name": "Get All Users (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
-          }
-        },
-        {
-          "name": "Update Role (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"role\": \"artist\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/updateRole/1", "host": ["{{base_url}}"], "path": ["updateRole", "1"] }
-          }
-        },
-        {
-          "name": "Block User (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/block/1", "host": ["{{base_url}}"], "path": ["block", "1"] }
-          }
-        },
-        {
-          "name": "Unblock User (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/unblock/1", "host": ["{{base_url}}"], "path": ["unblock", "1"] }
-          }
-        },
-        {
-          "name": "Delete User (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/delete/1", "host": ["{{base_url}}"], "path": ["delete", "1"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Music",
-      "item": [
-        {
-          "name": "Create Music (Artist)",
-          "request": {
-            "method": "POST",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "title", "value": "My Awesome Song", "type": "text" },
-                { "key": "music", "type": "file", "src": "" }
-              ]
-            },
-            "url": { "raw": "{{base_url}}/create", "host": ["{{base_url}}"], "path": ["create"] }
-          }
-        },
-        {
-          "name": "Get All Music (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/all?page=1&limit=10", "host": ["{{base_url}}"], "path": ["all"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "10" }] }
-          }
-        },
-        {
-          "name": "Search Music",
-          "request": {
-            "method": "GET",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/search/song-name", "host": ["{{base_url}}"], "path": ["search", "song-name"] }
-          }
-        },
-        {
-          "name": "Update Music (Artist/Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Updated Song Name\"\n}"
-            },
-            "url": { "raw": "{{base_url}}/update/1", "host": ["{{base_url}}"], "path": ["update", "1"] }
-          }
-        },
-        {
-          "name": "Delete Music (Artist/Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
-            "url": { "raw": "{{base_url}}/delete/1", "host": ["{{base_url}}"], "path": ["delete", "1"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Playlist",
-      "item": [
-        {
-          "name": "Create Playlist",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"My Playlist\",\n    \"description\": \"Chill Vibes\",\n    \"image\": \"http://example.com/image.jpg\",\n    \"userId\": 1\n}"
-            },
-            "url": { "raw": "{{base_url}}/create", "host": ["{{base_url}}"], "path": ["create"] }
-          }
-        },
-        {
-          "name": "Get All Playlists",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{base_url}}/all", "host": ["{{base_url}}"], "path": ["all"] }
-          }
-        },
-        {
-          "name": "Add Song to Playlist",
-          "request": {
-            "method": "POST",
-            "url": { "raw": "{{base_url}}/add/1/2", "host": ["{{base_url}}"], "path": ["add", "1", "2"] }
-          }
-        },
-        {
-          "name": "Remove Song from Playlist",
-          "request": {
-            "method": "DELETE",
-            "url": { "raw": "{{base_url}}/remove/1/2", "host": ["{{base_url}}"], "path": ["remove", "1", "2"] }
-          }
-        },
-        {
-          "name": "Get Playlist With Songs",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{base_url}}/with-songs/1", "host": ["{{base_url}}"], "path": ["with-songs", "1"] }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Like",
-      "item": [
-        {
-          "name": "Like Music",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"userId\": 1,\n    \"musicId\": 2\n}"
-            },
-            "url": { "raw": "{{base_url}}/like", "host": ["{{base_url}}"], "path": ["like"] }
-          }
-        },
-        {
-          "name": "Unlike Music",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"userId\": 1,\n    \"musicId\": 2\n}"
-            },
-            "url": { "raw": "{{base_url}}/unlike", "host": ["{{base_url}}"], "path": ["unlike"] }
-          }
-        },
-        {
-          "name": "Get Liked Music by User",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{base_url}}/liked/1", "host": ["{{base_url}}"], "path": ["liked", "1"] }
-          }
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "e1dd8ac9-bd6a-4e06-9172-09ee966757df",
+		"name": "Spotify Backend - LATEST",
+		"description": "Clean and mapped collection based on CURRENT backend code.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{ "name": "Register", "request": { "method": "POST", "url": "{{base_url}}/api/auth/register", "body": { "mode": "raw", "raw": "{\n  \"name\": \"User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"pass123\",\n  \"role\": \"user\"\n}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Login", "request": { "method": "POST", "url": "{{base_url}}/api/auth/login", "body": { "mode": "raw", "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"pass123\"\n}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Forget Password", "request": { "method": "POST", "url": "{{base_url}}/api/auth/forgetPassword", "body": { "mode": "raw", "raw": "{\n  \"email\": \"test@test.com\"\n}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Verify OTP", "request": { "method": "POST", "url": "{{base_url}}/api/auth/verifyOtp", "body": { "mode": "raw", "raw": "{\n  \"email\": \"test@test.com\",\n  \"otp\": \"123456\"\n}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Reset Password", "request": { "method": "POST", "url": "{{base_url}}/api/auth/resetPassword", "body": { "mode": "raw", "raw": "{\n  \"email\": \"test@test.com\",\n  \"newPassword\": \"newpass123\"\n}", "options": { "raw": { "language": "json" } } } } }
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{ "name": "My Profile", "request": { "method": "GET", "url": "{{base_url}}/api/users/profile", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ] } },
+				{ "name": "Update Profile", "request": { "method": "PUT", "url": "{{base_url}}/api/users/profile", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "raw", "raw": "{\"name\": \"Updated Name\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Admin: All Users", "request": { "method": "GET", "url": "{{base_url}}/api/users/users", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ] } },
+				{ "name": "Change Password", "request": { "method": "PATCH", "url": "{{base_url}}/api/users/changePassword", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "raw", "raw": "{\"currentPassword\": \"old\", \"newPassword\": \"new\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Admin: Delete User", "request": { "method": "DELETE", "url": "{{base_url}}/api/users/delete/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ] } },
+				{ "name": "Admin: Update Role", "request": { "method": "PATCH", "url": "{{base_url}}/api/users/updateRole/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ], "body": { "mode": "raw", "raw": "{\"role\": \"artist\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Admin: Block User", "request": { "method": "PATCH", "url": "{{base_url}}/api/users/block/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ] } },
+				{ "name": "Admin: Unblock User", "request": { "method": "PATCH", "url": "{{base_url}}/api/users/unblock/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ] } }
+			]
+		},
+		{
+			"name": "Music",
+			"item": [
+				{ "name": "Create Music (Artist)", "request": { "method": "POST", "url": "{{base_url}}/api/music/create", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "formdata", "formdata": [ { "key": "title", "value": "Song Title", "type": "text" }, { "key": "music", "type": "file", "src": [] } ] } } },
+				{ "name": "Admin: List All", "request": { "method": "GET", "url": "{{base_url}}/api/music/all", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ] } },
+				{ "name": "Search Music", "request": { "method": "GET", "url": "{{base_url}}/api/music/search/:name", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "name", "value": "song_name" } ] } },
+				{ "name": "Update Music", "request": { "method": "PUT", "url": "{{base_url}}/api/music/update/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ], "body": { "mode": "raw", "raw": "{\"title\": \"New Title\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Delete Music", "request": { "method": "DELETE", "url": "{{base_url}}/api/music/delete/:id", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "id", "value": "" } ] } }
+			]
+		},
+		{
+			"name": "Playlists",
+			"item": [
+				{ "name": "Create Playlist", "request": { "method": "POST", "url": "{{base_url}}/api/playlist/create", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "raw", "raw": "{\"name\": \"Hits\", \"description\": \"Best\", \"image\": \"url\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "My Playlists", "request": { "method": "GET", "url": "{{base_url}}/api/playlist/all", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ] } },
+				{ "name": "Add Music to Playlist", "request": { "method": "POST", "url": "{{base_url}}/api/playlist/add/:playlistId/:musicId", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "playlistId", "value": "" }, { "key": "musicId", "value": "" } ] } },
+				{ "name": "Remove Music from Playlist", "request": { "method": "DELETE", "url": "{{base_url}}/api/playlist/remove/:playlistId/:musicId", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "playlistId", "value": "" }, { "key": "musicId", "value": "" } ] } },
+				{ "name": "Playlist Details (with songs)", "request": { "method": "GET", "url": "{{base_url}}/api/playlist/with-songs/:playlistId", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "playlistId", "value": "" } ] } }
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{ "name": "Like Music", "request": { "method": "POST", "url": "{{base_url}}/api/like/like", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "raw", "raw": "{\"musicId\": \"id\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "Unlike Music", "request": { "method": "POST", "url": "{{base_url}}/api/like/unlike", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "body": { "mode": "raw", "raw": "{\"musicId\": \"id\"}", "options": { "raw": { "language": "json" } } } } },
+				{ "name": "List Liked Music", "request": { "method": "GET", "url": "{{base_url}}/api/like/liked/:userId", "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ], "variable": [ { "key": "userId", "value": "" } ] } }
+			]
+		}
+	],
+	"variable": [
+		{ "key": "base_url", "value": "http://localhost:5000" },
+		{ "key": "token", "value": "your_jwt_token_here" }
+	]
 }
