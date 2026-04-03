@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
+  console.log(req.cookies);
   let token = req.cookies?.token;
-
+  console.log(token);
   // Check Authorization header if cookie is not present
   if (!token && req.headers.authorization) {
     const parts = req.headers.authorization.split(" ");
