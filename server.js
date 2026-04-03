@@ -26,7 +26,7 @@ Like.belongsTo(Music, { foreignKey: 'musicId' });
 
 const PORT = process.env.PORT;
 
-sequelize.sync().then(() => {
+sequelize.sync({ alter: true }).then(() => {
     app.listen(process.env.PORT, () => {
         console.log("Server running on port " + process.env.PORT);
     });
@@ -36,3 +36,16 @@ sequelize.sync().then(() => {
 });
 // in this code sequilize.sync() will create all the tables in the database
 // and then the server will start listening on the specified port
+
+// Graceful shutdown
+process.on("SIGINT", async () => {
+    console.log("Shutting down gracefully...");
+    await sequelize.close();
+    process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+    console.log("Shutting down gracefully...");
+    await sequelize.close();
+    process.exit(0);
+});
