@@ -1,3 +1,4 @@
+const { authRoutes, userRoutes, musicRoutes, playlistRoutes, likeRoutes } = require("./Route/index");
 const express = require("express");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
@@ -5,11 +6,6 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
-const authRoutes = require("./routes/auth.routes");
-const userRoutes = require("./routes/user.routes");
-const musicRoutes = require("./routes/music.routes");
-const playlistRoutes = require("./routes/playlist.routes.js");
-const likeRoutes = require("./routes/like.routes");
 
 const app = express();
 
