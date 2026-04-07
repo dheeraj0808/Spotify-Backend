@@ -16,7 +16,11 @@ const registerUser = async (req, res) => {
         message: "All fields are required"
       });
     }
-
+    if (role === "admin") {
+      return res.status(403).json({
+        message: "Admin registration not allowed"
+      });
+    }
     const existingUser = await User.findOne({
       where: { email: email.toLowerCase() }
     });
