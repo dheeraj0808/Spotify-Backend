@@ -1,6 +1,7 @@
 const User = require("../../model/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendOtpEmail } = require("../../Services/email.service");
 
 const generateOtp = () => {
   return Math.floor(100000 * Math.random()).toString();
@@ -152,8 +153,8 @@ const forgetPassword = async (req, res) => {
       isOtpVerified: false
     });
 
-    // 6. For now, just log the OTP (later you'll send email)
-    console.log(`OTP for ${email}: ${otp}`);
+    // 6. Send OTP via email
+    await sendOtpEmail(email, otp);
 
     // 7. Send success response
     res.json({
