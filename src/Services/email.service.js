@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
+const { otpTemplate, welcomeTemplate } = require('./emailTemplates');
 
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     secure: false, // true for 465, false for other ports
@@ -12,44 +13,47 @@ const createTransporter = () => {
   });
 };
 
-const sendOtpEmail = async (email, otp) => {
+const sendOtpEmail = async (email, otp, userName = '') => {
   try {
     const transporter = createTransporter();
     
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: 'Password Reset OTP - Spotify Backend',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #1DB954; text-align: center;">Password Reset OTP</h2>
-          <p>Hello,</p>
-          <p>You have requested to reset your password. Your OTP (One-Time Password) is:</p>
-          <div style="background-color: #f0f0f0; padding: 15px; text-align: center; margin: 20px 0; border-radius: 5px;">
-            <span style="font-size: 24px; font-weight: bold; color: #1DB954; letter-spacing: 3px;">${otp}</span>
-          </div>
-          <p><strong>Important:</strong></p>
-          <ul>
-            <li>This OTP will expire in 10 minutes</li>
-            <li>Do not share this OTP with anyone</li>
-            <li>If you didn't request this OTP, please ignore this email</li>
-          </ul>
-          <p style="margin-top: 30px; text-align: center; color: #666;">
-            This is an automated message from Spotify Backend
-          </p>
-        </div>
-      `,
+      subject: '🔐 Password Reset OTP - Spotify Backend',
+      html: otpTemplate(otp, userName),
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
+    console.log('OTP Email sent successfully:', info.messageId);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending OTP email:', error);
     throw new Error('Failed to send OTP email');
+  }
+};
+
+const sendWelcomeEmail = async (email, userName) => {
+  try {
+    const transporter = createTransporter();
+    
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: '🎉 Welcome to Spotify Backend!',
+      html: welcomeTemplate(userName),
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Welcome Email sent successfully:', info.messageId);
+    return true;
+  } catch (error) {
+    console.error('Error sending welcome email:', error);
+    throw new Error('Failed to send welcome email');
   }
 };
 
 module.exports = {
   sendOtpEmail,
+  sendWelcomeEmail,
 };
