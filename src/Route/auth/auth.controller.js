@@ -1,7 +1,7 @@
 const User = require("../../model/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { sendOtpEmail } = require("../../Services/email.service");
+const { sendOtpEmail, sendWelcomeEmail } = require("../../Services/email.service");
 
 const generateOtp = () => {
   return Math.floor(100000 * Math.random()).toString();
@@ -50,6 +50,14 @@ const registerUser = async (req, res) => {
     const userData = user.toJSON();
     delete userData.password;
 
+    // Send welcome email - temporarily disabled for debugging
+    // try {
+    //   await sendWelcomeEmail(email, name);
+    // } catch (emailError) {
+    //   console.log('Welcome email failed:', emailError.message);
+    //   // Don't fail registration if email fails
+    // }
+
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -57,6 +65,8 @@ const registerUser = async (req, res) => {
     });
 
   } catch (error) {
+    console.log('Registration Error:', error);
+    console.log('Error Stack:', error.stack);
     res.status(500).json({
       error: error.message
     });
@@ -154,7 +164,7 @@ const forgetPassword = async (req, res) => {
     });
 
     // 6. Send OTP via email
-    await sendOtpEmail(email, otp);
+    await sendOtpEmail(email, otp, user.name);
 
     // 7. Send success response
     res.json({

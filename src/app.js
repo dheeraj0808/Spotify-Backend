@@ -23,8 +23,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(helmet())
-app.use(limiter)
+// app.use(helmet()) // Temporarily disabled for debugging
+// app.use(limiter) // Temporarily disabled for debugging
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);

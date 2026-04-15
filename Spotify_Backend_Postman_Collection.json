@@ -7,6 +7,18 @@
 	},
 	"item": [
 		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Server Status",
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/"
+					}
+				}
+			]
+		},
+		{
 			"name": "Auth",
 			"item": [
 				{
@@ -31,7 +43,7 @@
 						"url": "{{base_url}}/api/auth/register",
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"pass123\",\n  \"role\": \"user\"\n}",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"dheeraj94566@gmail.com\",\n  \"password\": \"pass123\",\n  \"role\": \"user\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -62,7 +74,7 @@
 						"url": "{{base_url}}/api/auth/login",
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"pass123\"\n}",
+							"raw": "{\n  \"email\": \"dheeraj94566@gmail.com\",\n  \"password\": \"pass123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -78,7 +90,7 @@
 						"url": "{{base_url}}/api/auth/forgetPassword",
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"test@test.com\"\n}",
+							"raw": "{\n  \"email\": \"dheeraj94566@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -94,7 +106,7 @@
 						"url": "{{base_url}}/api/auth/verifyOtp",
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"test@test.com\",\n  \"otp\": \"123456\"\n}",
+							"raw": "{\n  \"email\": \"dheeraj94566@gmail.com\",\n  \"otp\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +122,7 @@
 						"url": "{{base_url}}/api/auth/resetPassword",
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"test@test.com\",\n  \"newPassword\": \"newpass123\"\n}",
+							"raw": "{\n  \"email\": \"dheeraj94566@gmail.com\",\n  \"newPassword\": \"newpass123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -600,7 +612,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "https://spotify-backend-3ouf.onrender.com"
+			"value": "http://localhost:5001"
 		},
 		{
 			"key": "token",
